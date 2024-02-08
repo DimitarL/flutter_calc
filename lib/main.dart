@@ -38,17 +38,30 @@ class _CalculatorHomePageState extends State<CalculatorHomePage> {
     setState(() {
       if (buttonValue == 'C') {
         _clear();
-      } else if (buttonValue == '+' || buttonValue == '-' ||
-        buttonValue == '*' || buttonValue == '/') {
-          _addOperator(buttonValue);
+      } else if (buttonValue == '+' ||
+          buttonValue == '-' ||
+          buttonValue == '*' ||
+          buttonValue == '/') {
+        _addOperator(buttonValue);
       } else if (buttonValue == '=') {
-          _calculate();
+        _calculate();
       } else if (_operator == '') {
-          _firstNumber = double.parse(buttonValue);
-          _output = '$_firstNumber';
+        if (_firstNumber == 0) {
+          _output = buttonValue;
+          _firstNumber = double.parse(_output);
+        } else {
+          _output += buttonValue;
+          _firstNumber = double.parse(_output);
+        }
       } else {
-          _secondNumber = double.parse(buttonValue);
+        if (_secondNumber == 0) {
           _output += ' $buttonValue';
+          _secondNumber = double.parse(buttonValue);
+        } else {
+          _output = '$_output$buttonValue';
+          String secondNumberAsString = _secondNumber.toString();
+          _secondNumber = double.parse('$secondNumberAsString$buttonValue');
+        }
       }
     });
   }
@@ -78,6 +91,7 @@ class _CalculatorHomePageState extends State<CalculatorHomePage> {
       }
 
       _firstNumber = result;
+      _secondNumber = 0.0;
       _operator = '';
       _output = '$_output = $result';
     }
